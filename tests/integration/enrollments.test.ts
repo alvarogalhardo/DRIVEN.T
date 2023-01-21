@@ -204,7 +204,7 @@ describe("POST /enrollments", () => {
         },
       });
 
-      it("should respond with status 400 and create new enrollment if there is not any", async () => {
+      it("should respond with status 400 and create new enrollment if body is invalid", async () => {
         const body = generateInvalidBody();
         const token = await generateValidToken();
 
