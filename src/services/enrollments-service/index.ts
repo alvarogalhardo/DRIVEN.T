@@ -1,16 +1,17 @@
 import { request } from "@/utils/request";
-import { notFoundError, requestError } from "@/errors";
+import { notFoundError } from "@/errors";
 import addressRepository, { CreateAddressParams } from "@/repositories/address-repository";
 import enrollmentRepository, { CreateEnrollmentParams } from "@/repositories/enrollment-repository";
 import { exclude } from "@/utils/prisma-utils";
 import { Address, Enrollment } from "@prisma/client";
+import { ViaCEPAddress } from "@/protocols";
 
 async function getAddressFromCEP(cep: string) {
   const result = await request.get(`https://viacep.com.br/ws/${cep}/json/`);
   if (!result.data) {
     throw notFoundError();
   }
-  const { logradouro, complemento, bairro, localidade, uf } = result.data;
+  const { logradouro, complemento, bairro, localidade, uf } = result.data as ViaCEPAddress;
   const data = { logradouro, complemento, bairro, localidade, uf };
   const adress = { ...data, cidade: localidade };
   delete adress.localidade;
